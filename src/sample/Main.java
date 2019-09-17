@@ -140,16 +140,12 @@ public class Main extends Application {
     public void War(int index){ //start from 0
         System.out.println("player: " + player.get(index).getValue() + " computer: " + computer.get(index).getValue());
         if(player.get(index).getValue() > computer.get(index).getValue()){
-            player.add(player.remove(index));
-            for(int i = 0; i <= index; i++)
-                player.add(computer.remove(i));
+            swapCards(player, computer, index);
             System.out.println("player wins!"
                     + "\nNumber of computer cards: " + computer.size()
                     + "\nNumber of player cards: " + player.size());
         }else if (player.get(index).getValue() < computer.get(index).getValue()){
-            computer.add(computer.remove(index));
-            for(int i = 0; i <= index; i++)
-                computer.add(player.remove(index));
+            swapCards(computer, player, index);
             System.out.println("computer wins! " +
                     "\nNumber of computer cards: " + computer.size()
                     + "\nNumber of player cards: " + player.size());
