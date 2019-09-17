@@ -13,6 +13,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.shape.Rectangle;
+import sun.awt.geom.AreaOp;
+
 import java.util.ArrayList;
 import java.util.*;
 import java.util.Collections;
@@ -26,12 +28,22 @@ public class Main extends Application {
 
     String[] suits = {"hearts", "spades", "diamonds", "clubs"};
     ArrayList<Card> deck = new ArrayList<Card>();
+    ArrayList<Card> player = new ArrayList<Card>();
+    ArrayList<Card> computer = new ArrayList<Card>();
 
     @Override
     public void start(Stage primaryStage) throws Exception{
         createDeck();
         shuffleCards(deck);
-        printCards(deck);
+        //printCards(deck);
+
+        splitDeck1();
+        splitDeck2();
+        printCards(player);
+        System.out.println("\n");
+        printCards(computer);
+        System.out.println("Player Cards: " + player.size() + " Computer Cards: " + computer.size() + "\n");
+        playWar();
 
         //sets up root for GUI
         Group root = new Group();
@@ -98,10 +110,66 @@ public class Main extends Application {
         Collections.shuffle(cards);
     }
 
+    public void splitDeck1(){
+        ArrayList<Card> first = new ArrayList<Card>(deck.size()/2);
+        for(int i = 0; i < deck.size()/2; i++){
+            computer.add(deck.get(i));
+        }
+    }
+
+    public void splitDeck2(){
+        ArrayList<Card> second = new ArrayList<Card>(deck.size()/2);
+        for(int i = (deck.size()/2) - 1; i >= 0; i--){
+            player.add(deck.get(i));
+        }
+    }
+
+    public void swapCards(ArrayList<Card> winner,ArrayList<Card> loser, int index){
+        for(int i = 0; i <= index; i++){
+            winner.add(winner.remove(i));
+            winner.add(loser.remove(i));
+        }
+    }
+
     public void printCards(ArrayList<Card> cards){
         for(int i = 0; i < cards.size(); i++){
             System.out.println(cards.get(i).getSuit() + " " + cards.get(i).getValue() + "\t");
         }
+    }
+
+    public void War(int index){ //start from 0
+        System.out.println("player: " + player.get(index).getValue() + " computer: " + computer.get(index).getValue());
+        if(player.get(index).getValue() > computer.get(index).getValue()){
+            player.add(player.remove(index));
+            for(int i = 0; i <= index; i++)
+                player.add(computer.remove(i));
+            System.out.println("player wins!"
+                    + "\nNumber of computer cards: " + computer.size()
+                    + "\nNumber of player cards: " + player.size());
+        }else if (player.get(index).getValue() < computer.get(index).getValue()){
+            computer.add(computer.remove(index));
+            for(int i = 0; i <= index; i++)
+                computer.add(player.remove(index));
+            System.out.println("computer wins! " +
+                    "\nNumber of computer cards: " + computer.size()
+                    + "\nNumber of player cards: " + player.size());
+            //computer wins
+        }else{
+            System.out.println("tied");
+            while (index < deck.size())
+                War(index + 1);
+        }
+        System.out.println(" ~ ");
+    }
+
+    public void playWar(){
+        while (player.size() > 0 || computer.size() > 0){
+            War(0);
+        }
+        if(player.size() == 0)
+            System.out.println("Player Wins!");
+        else
+            System.out.println("Computer Wins!");
     }
 
 
