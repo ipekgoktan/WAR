@@ -14,6 +14,9 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.shape.Rectangle;
 import java.util.ArrayList;
+import java.util.*;
+import java.util.Collections;
+
 
 public class Main extends Application {
 
@@ -27,6 +30,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         createDeck();
+        shuffleCards(deck);
         printCards(deck);
 
         //sets up root for GUI
@@ -90,8 +94,8 @@ public class Main extends Application {
         }
     }
 
-    public void suffleCards(){
-        
+    public void shuffleCards(List<Card> cards){
+        Collections.shuffle(cards);
     }
 
     public void printCards(ArrayList<Card> cards){

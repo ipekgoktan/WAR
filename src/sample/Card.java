@@ -10,8 +10,8 @@ public class Card {
     }
 
     public Card(){
-
     }
+
 
     public int getValue(){
         return value;
