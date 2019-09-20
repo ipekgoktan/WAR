@@ -43,7 +43,7 @@ public class Main extends Application {
         System.out.println("\n");
         printCards(computer);
         System.out.println("Player Cards: " + player.size() + " Computer Cards: " + computer.size() + "\n");
-        playWar();
+
 
         //sets up root for GUI
         Group root = new Group();
@@ -64,6 +64,9 @@ public class Main extends Application {
         //creates scene
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        playWar();
+
     }
 
     public void glide(Group root){
@@ -137,6 +140,9 @@ public class Main extends Application {
         }
     }
 
+    //public boolean willWin(int index){ //Check if someone wins bjn
+    //}
+
     public void War(int index){ //start from 0
         System.out.println("player: " + player.get(index).getValue() + " computer: " + computer.get(index).getValue());
         if(player.get(index).getValue() > computer.get(index).getValue()){
@@ -162,10 +168,14 @@ public class Main extends Application {
         while (player.size() > 0 || computer.size() > 0){
             War(0);
         }
-        if(player.size() == 0)
+        if(player.size() == 0) {
             System.out.println("Player Wins!");
-        else
+            System.exit(0);
+        }else if (computer.size() == 0){
             System.out.println("Computer Wins!");
+            System.exit(0);
+        }
+
     }
 
 
