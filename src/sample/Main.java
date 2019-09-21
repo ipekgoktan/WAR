@@ -14,6 +14,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.shape.Rectangle;
@@ -37,6 +38,10 @@ public class Main extends Application {
 
     Group root = new Group();
 
+    Text t_p = new Text(10, 15, "Player Cards: ");
+    Text t_c = new Text(350, 15, "Computer Cards: ");
+
+
     @Override
     public void start(Stage primaryStage) throws Exception{
         createDeck();
@@ -50,15 +55,9 @@ public class Main extends Application {
         printCards(computer);
         System.out.println("Player Cards: " + player.size() + " Computer Cards: " + computer.size() + "\n");
 
-
-
         //sets up root for GUI
-
         Scene scene = new Scene(root, 500,500, Color.DARKOLIVEGREEN);
         primaryStage.setTitle("WAR");
-
-        //Button btn = new Button();
-        //btn.setText("Say 'Hello World'");
 
         //Sets up two decks
         Rectangle r_player = new Rectangle(x, player_y, 80, 120); //creates the deck of the player, which is represented by a rectangle
@@ -68,8 +67,14 @@ public class Main extends Application {
         r_computer.setFill(Color.DARKRED);
         root.getChildren().add(r_computer);
 
-        //playerGlide();
-        //glide();
+        int player_cards = player.size();
+        int computer_cards = computer.size();
+
+        t_p.setFill(Color.rgb(255, 255, 255));
+        root.getChildren().add(t_p);
+
+        t_c.setFill(Color.rgb(255, 255, 255));
+        root.getChildren().add(t_c);
 
         r_player.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 
@@ -99,17 +104,22 @@ public class Main extends Application {
         r_computer.setFill(Color.WHITESMOKE);
     }
 
-    public void playerGlide(){
+    public void playerGlide(int index){
         Rectangle r_p = new Rectangle(x, player_y, 80, 120); //creates the deck of the player, which is represented by a rectangle
+        Text t_p = new Text(x, player_y, player.get(index).getSuit() + "\n" + player.get(index).getValue());
+
+        r_p.setAccessibleText(player.get(index).getSuit() + "\n" + player.get(index).getValue());
+
         //r_p.setFill(Color.DARKRED);
         root.getChildren().add(r_p);
+
 
         Timeline timeline_p = new Timeline(
                 new KeyFrame(Duration.seconds(3),new KeyValue(r_p.layoutXProperty(), 100))
                 ,new KeyFrame(Duration.seconds(3),new KeyValue(r_p.layoutYProperty(), -150)));
         timeline_p.setCycleCount(1);
         timeline_p.play();
-        r_p.setFill(Color.WHITESMOKE);
+        r_p.setFill(Color.RED);
     }
 
     public void createDeck(){
@@ -155,6 +165,7 @@ public class Main extends Application {
     //}
 
     public void War(int index){ //start from 0
+        playerGlide(index);
         if(player.size() > 0 && computer.size() > 0) {
             System.out.println("player: " + player.get(index).getValue() + " computer: " + computer.get(index).getValue());
             if (player.get(index).getValue() > computer.get(index).getValue()) {
@@ -198,7 +209,9 @@ public class Main extends Application {
     EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
         @Override
         public void handle(MouseEvent e) {
-            playerGlide();
+            t_p.setText("Player Cards: " + player.size());
+            t_c.setText("Computer Cards: " + computer.size());
+
             glide();
             System.out.println("Clicked!");
             if(player.size() > 0 && computer.size() > 0){
