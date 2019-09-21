@@ -35,6 +35,8 @@ public class Main extends Application {
     ArrayList<Card> player = new ArrayList<Card>();
     ArrayList<Card> computer = new ArrayList<Card>();
 
+    Group root = new Group();
+
     @Override
     public void start(Stage primaryStage) throws Exception{
         createDeck();
@@ -51,7 +53,7 @@ public class Main extends Application {
 
 
         //sets up root for GUI
-        Group root = new Group();
+
         Scene scene = new Scene(root, 500,500, Color.DARKOLIVEGREEN);
         primaryStage.setTitle("WAR");
 
@@ -60,14 +62,14 @@ public class Main extends Application {
 
         //Sets up two decks
         Rectangle r_player = new Rectangle(x, player_y, 80, 120); //creates the deck of the player, which is represented by a rectangle
-        r_player.setFill(Color.RED);
+        r_player.setFill(Color.DARKRED);
         root.getChildren().add(r_player);
         Rectangle r_computer = new Rectangle(x, comp_y, 80, 120); //creates the opponent's deck
-        r_computer.setFill(Color.RED);
+        r_computer.setFill(Color.DARKRED);
         root.getChildren().add(r_computer);
 
-        playerGlide(root);
-        glide(root);
+        //playerGlide();
+        //glide();
 
         r_player.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 
@@ -79,13 +81,13 @@ public class Main extends Application {
 
     }
 
-    public void glide(Group root){
+    public void glide(){
         Pane canvas = new Pane();
 
         //creates two rectangles on top of each deck
 
         Rectangle r_computer = new Rectangle(x, comp_y, 80, 120); //creates the opponent's deck
-        r_computer.setFill(Color.DARKRED);
+        //r_computer.setFill(Color.DARKRED);
         root.getChildren().add(r_computer);
 
         Timeline timeline_c = new Timeline(
@@ -94,13 +96,12 @@ public class Main extends Application {
 
         timeline_c.setCycleCount(1);
         timeline_c.play();
-        //r_computer.setFill(Color.WHITESMOKE);
-
+        r_computer.setFill(Color.WHITESMOKE);
     }
 
-    public void playerGlide(Group root){
+    public void playerGlide(){
         Rectangle r_p = new Rectangle(x, player_y, 80, 120); //creates the deck of the player, which is represented by a rectangle
-        r_p.setFill(Color.DARKRED);
+        //r_p.setFill(Color.DARKRED);
         root.getChildren().add(r_p);
 
         Timeline timeline_p = new Timeline(
@@ -108,7 +109,7 @@ public class Main extends Application {
                 ,new KeyFrame(Duration.seconds(3),new KeyValue(r_p.layoutYProperty(), -150)));
         timeline_p.setCycleCount(1);
         timeline_p.play();
-        //r_p.setFill(Color.WHITESMOKE);
+        r_p.setFill(Color.WHITESMOKE);
     }
 
     public void createDeck(){
@@ -197,6 +198,8 @@ public class Main extends Application {
     EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
         @Override
         public void handle(MouseEvent e) {
+            playerGlide();
+            glide();
             System.out.println("Clicked!");
             if(player.size() > 0 && computer.size() > 0){
                 War(0);
