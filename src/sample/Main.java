@@ -86,18 +86,23 @@ public class Main extends Application {
 
     }
 
-    public void glide(){
-        Pane canvas = new Pane();
-
+    public void glide(int index){
+        //Pane canvas = new Pane();
         //creates two rectangles on top of each deck
 
         Rectangle r_computer = new Rectangle(x, comp_y, 80, 120); //creates the opponent's deck
+        Text t_c = new Text(computer.get(index).getSuit() + "\n" + computer.get(index).getValue());
+
+        StackPane stack = new StackPane();
+        stack.getChildren().addAll(r_computer, t_c);
+        stack.setLayoutX(x);
+        stack.setLayoutY(comp_y);
         //r_computer.setFill(Color.DARKRED);
-        root.getChildren().add(r_computer);
+        root.getChildren().add(stack);
 
         Timeline timeline_c = new Timeline(
-                new KeyFrame(Duration.seconds(3),new KeyValue(r_computer.layoutXProperty(), -100))
-                ,new KeyFrame(Duration.seconds(3),new KeyValue(r_computer.layoutYProperty(), 150)));
+                new KeyFrame(Duration.seconds(3),new KeyValue(stack.layoutXProperty(), 100))
+                ,new KeyFrame(Duration.seconds(3),new KeyValue(stack.layoutYProperty(), 200)));
 
         timeline_c.setCycleCount(1);
         timeline_c.play();
@@ -105,22 +110,24 @@ public class Main extends Application {
     }
 
     public void playerGlide(int index){
-        Rectangle r_p = new Rectangle(x, player_y, 80, 120); //creates the deck of the player, which is represented by a rectangle
-        Text t_p = new Text(x, player_y, player.get(index).getSuit() + "\n" + player.get(index).getValue());
-
-        r_p.setAccessibleText(player.get(index).getSuit() + "\n" + player.get(index).getValue());
+        Rectangle r_p = new Rectangle(80, 120); //creates the deck of the player, which is represented by a rectangle
+        Text t_p = new Text(player.get(index).getSuit() + "\n" + player.get(index).getValue());
+        StackPane stack = new StackPane();
+        stack.getChildren().addAll(r_p, t_p);
+        stack.setLayoutX(x);
+        stack.setLayoutY(player_y);
+        ////r_p.setAccessibleText(player.get(index).getSuit() + "\n" + player.get(index).getValue());
 
         //r_p.setFill(Color.DARKRED);
-        root.getChildren().add(r_p);
-
+        root.getChildren().add(stack);
 
         Timeline timeline_p = new Timeline(
-                new KeyFrame(Duration.seconds(3),new KeyValue(r_p.layoutXProperty(), 100))
-                ,new KeyFrame(Duration.seconds(3),new KeyValue(r_p.layoutYProperty(), -150)));
+                new KeyFrame(Duration.seconds(3),new KeyValue(stack.layoutXProperty(), 300))
+                ,new KeyFrame(Duration.seconds(3),new KeyValue(stack.layoutYProperty(), 200)));
         timeline_p.setCycleCount(1);
         timeline_p.play();
-        r_p.setFill(Color.RED);
-    }
+        r_p.setFill(Color.WHITESMOKE);
+    } //I learned how to create stacks from https://stackoverflow.com/questions/46997267/how-do-i-insert-text-into-a-shape-in-javafx
 
     public void createDeck(){
         for(int v = 1; v <= 13; v++){
@@ -150,7 +157,7 @@ public class Main extends Application {
 
     public void swapCards(ArrayList<Card> winner,ArrayList<Card> loser, int index){
         for(int i = 0; i <= index; i++){ //SOOB problems occur sometimes, check it out
-            winner.add(winner.remove(i));
+            winner.add(winner.size()-1, winner.remove(i));
             winner.add(loser.remove(i));
         }
     }
@@ -166,6 +173,7 @@ public class Main extends Application {
 
     public void War(int index){ //start from 0
         playerGlide(index);
+        glide(index);
         if(player.size() > 0 && computer.size() > 0) {
             System.out.println("player: " + player.get(index).getValue() + " computer: " + computer.get(index).getValue());
             if (player.get(index).getValue() > computer.get(index).getValue()) {
@@ -212,7 +220,7 @@ public class Main extends Application {
             t_p.setText("Player Cards: " + player.size());
             t_c.setText("Computer Cards: " + computer.size());
 
-            glide();
+
             System.out.println("Clicked!");
             if(player.size() > 0 && computer.size() > 0){
                 War(0);
