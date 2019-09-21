@@ -4,11 +4,15 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -45,10 +49,14 @@ public class Main extends Application {
         System.out.println("Player Cards: " + player.size() + " Computer Cards: " + computer.size() + "\n");
 
 
+
         //sets up root for GUI
         Group root = new Group();
         Scene scene = new Scene(root, 500,500, Color.DARKOLIVEGREEN);
         primaryStage.setTitle("WAR");
+
+        //Button btn = new Button();
+        //btn.setText("Say 'Hello World'");
 
         //Sets up two decks
         Rectangle r_player = new Rectangle(x, player_y, 80, 120); //creates the deck of the player, which is represented by a rectangle
@@ -61,11 +69,13 @@ public class Main extends Application {
         playerGlide(root);
         glide(root);
 
+        r_player.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
+
         //creates scene
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        playWar();
+        //playWar(primaryStage);
 
     }
 
@@ -128,7 +138,7 @@ public class Main extends Application {
     }
 
     public void swapCards(ArrayList<Card> winner,ArrayList<Card> loser, int index){
-        for(int i = 0; i <= index; i++){
+        for(int i = 0; i <= index; i++){ //SOOB problems occur sometimes, check it out
             winner.add(winner.remove(i));
             winner.add(loser.remove(i));
         }
@@ -144,39 +154,62 @@ public class Main extends Application {
     //}
 
     public void War(int index){ //start from 0
-        System.out.println("player: " + player.get(index).getValue() + " computer: " + computer.get(index).getValue());
-        if(player.get(index).getValue() > computer.get(index).getValue()){
-            swapCards(player, computer, index);
-            System.out.println("player wins!"
-                    + "\nNumber of computer cards: " + computer.size()
-                    + "\nNumber of player cards: " + player.size());
-        }else if (player.get(index).getValue() < computer.get(index).getValue()){
-            swapCards(computer, player, index);
-            System.out.println("computer wins! " +
-                    "\nNumber of computer cards: " + computer.size()
-                    + "\nNumber of player cards: " + player.size());
-            //computer wins
+        if(player.size() > 0 && computer.size() > 0) {
+            System.out.println("player: " + player.get(index).getValue() + " computer: " + computer.get(index).getValue());
+            if (player.get(index).getValue() > computer.get(index).getValue()) {
+                swapCards(player, computer, index);
+                System.out.println("player wins!"
+                        + "\nNumber of computer cards: " + computer.size()
+                        + "\nNumber of player cards: " + player.size());
+            } else if (player.get(index).getValue() < computer.get(index).getValue()) {
+                swapCards(computer, player, index);
+                System.out.println("computer wins! " +
+                        "\nNumber of computer cards: " + computer.size()
+                        + "\nNumber of player cards: " + player.size());
+                //computer wins
+            } else {
+                System.out.println("tied");
+                while (index < deck.size())
+                    War(index + 1);
+            }
+            System.out.println(" ~ ");
         }else{
-            System.out.println("tied");
-            while (index < deck.size())
-                War(index + 1);
+            playWar();
         }
-        System.out.println(" ~ ");
     }
 
     public void playWar(){
-        while (player.size() > 0 || computer.size() > 0){
+        //primaryStage.show();
+        while (player.size() > 0 && computer.size() > 0){
             War(0);
         }
         if(player.size() == 0) {
-            System.out.println("Player Wins!");
+            System.out.println("Computer Wins!");
             System.exit(0);
         }else if (computer.size() == 0){
-            System.out.println("Computer Wins!");
+            System.out.println("Player Wins!");
             System.exit(0);
         }
 
     }
+
+    //Creating the mouse event handler
+    EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+        @Override
+        public void handle(MouseEvent e) {
+            System.out.println("Clicked!");
+            if(player.size() > 0 && computer.size() > 0){
+                War(0);
+            }else if(player.size() == 0) {
+                System.out.println("Computer Wins!");
+                System.exit(0);
+            }else if (computer.size() == 0){
+                System.out.println("Player Wins!");
+                System.exit(0);
+            }
+        }
+    }; //I learned how to add the clicking reaction from https://www.tutorialspoint.com/javafx/javafx_event_handling.htm
+
 
 
     public static void main(String[] args) {
