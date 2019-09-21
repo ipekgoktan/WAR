@@ -31,25 +31,26 @@ public class Main extends Application {
     int comp_y = 50; //set values for opponent deck
     int x = 210; //x value for center of screen for a rectangle with w = 80
 
-    String[] suits = {"hearts", "spades", "diamonds", "clubs"};
-    ArrayList<Card> deck = new ArrayList<Card>();
+    String[] suits = {"hearts", "spades", "diamonds", "clubs"}; //suits array
+    ArrayList<Card> deck = new ArrayList<Card>(); //creates arraylist for the cards and each split deck
     ArrayList<Card> player = new ArrayList<Card>();
     ArrayList<Card> computer = new ArrayList<Card>();
 
-    Group root = new Group();
+    Group root = new Group(); //creates new group
 
-    Text t_p = new Text(10, 15, "Player Cards: ");
-    Text t_c = new Text(350, 15, "Computer Cards: ");
+    Text t_p = new Text(10, 15, "Player Cards: "); //text that displays player cards
+    Text t_c = new Text(350, 15, "Computer Cards: "); //text that displays computer cards
 
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        createDeck();
-        shuffleCards(deck);
-        //printCards(deck);
+        createDeck(); //creates deck
+        shuffleCards(deck); //shuffles cards randomly
 
-        splitDeck1();
-        splitDeck2();
+        splitDeck1(); //creates first half deck
+        splitDeck2(); //creates second half deck
+
+        //prints values to terminal for troubleshooting
         printCards(player);
         System.out.println("\n");
         printCards(computer);
@@ -67,102 +68,100 @@ public class Main extends Application {
         r_computer.setFill(Color.DARKRED);
         root.getChildren().add(r_computer);
 
+        //variables that store amount of cards
         int player_cards = player.size();
         int computer_cards = computer.size();
 
+        //adds the players card count text to root
         t_p.setFill(Color.rgb(255, 255, 255));
         root.getChildren().add(t_p);
 
+        //adds the computers card count text to root
         t_c.setFill(Color.rgb(255, 255, 255));
         root.getChildren().add(t_c);
 
+        //adds eventhandler to the player's rectangle that reacts when it is clicked
         r_player.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
 
         //creates scene
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        //playWar(primaryStage);
-
     }
 
-    public void glide(int index){
+    public void glide(int index){ //glide animation for computers card
         //Pane canvas = new Pane();
         //creates two rectangles on top of each deck
 
-        Rectangle r_computer = new Rectangle(x, comp_y, 80, 120); //creates the opponent's deck
-        Text t_c = new Text(computer.get(index).getSuit() + "\n" + computer.get(index).getValue());
+        Rectangle r_computer = new Rectangle(x, comp_y, 80, 120); //creates the opponent's card
+        Text t_c = new Text(computer.get(index).getSuit() + "\n" + computer.get(index).getValue()); //displays value of card
 
-        StackPane stack = new StackPane();
-        stack.getChildren().addAll(r_computer, t_c);
+        StackPane stack = new StackPane(); //stack that will store both values
+        stack.getChildren().addAll(r_computer, t_c); //adds both elements to the stack
         stack.setLayoutX(x);
         stack.setLayoutY(comp_y);
-        //r_computer.setFill(Color.DARKRED);
-        root.getChildren().add(stack);
+        root.getChildren().add(stack); //adds stack to root
 
-        Timeline timeline_c = new Timeline(
+        Timeline timeline_c = new Timeline( //animation of cards
                 new KeyFrame(Duration.seconds(3),new KeyValue(stack.layoutXProperty(), 100))
                 ,new KeyFrame(Duration.seconds(3),new KeyValue(stack.layoutYProperty(), 200)));
 
-        timeline_c.setCycleCount(1);
-        timeline_c.play();
+        timeline_c.setCycleCount(1); //runs once
+        timeline_c.play(); //plays animation
         r_computer.setFill(Color.WHITESMOKE);
     }
 
     public void playerGlide(int index){
-        Rectangle r_p = new Rectangle(80, 120); //creates the deck of the player, which is represented by a rectangle
-        Text t_p = new Text(player.get(index).getSuit() + "\n" + player.get(index).getValue());
+        Rectangle r_p = new Rectangle(80, 120); //creates the card of the player, which is represented by a rectangle
+        Text t_p = new Text(player.get(index).getSuit() + "\n" + player.get(index).getValue()); //displays value of card
         StackPane stack = new StackPane();
         stack.getChildren().addAll(r_p, t_p);
         stack.setLayoutX(x);
         stack.setLayoutY(player_y);
-        ////r_p.setAccessibleText(player.get(index).getSuit() + "\n" + player.get(index).getValue());
+        root.getChildren().add(stack); //adds stack to root
 
-        //r_p.setFill(Color.DARKRED);
-        root.getChildren().add(stack);
-
-        Timeline timeline_p = new Timeline(
+        Timeline timeline_p = new Timeline(//animation of cards
                 new KeyFrame(Duration.seconds(3),new KeyValue(stack.layoutXProperty(), 300))
                 ,new KeyFrame(Duration.seconds(3),new KeyValue(stack.layoutYProperty(), 200)));
-        timeline_p.setCycleCount(1);
-        timeline_p.play();
+        timeline_p.setCycleCount(1);//runs once
+        timeline_p.play();//plays animation
         r_p.setFill(Color.WHITESMOKE);
     } //I learned how to create stacks from https://stackoverflow.com/questions/46997267/how-do-i-insert-text-into-a-shape-in-javafx
 
-    public void createDeck(){
-        for(int v = 1; v <= 13; v++){
-            for(String s: suits){
-                deck.add(new Card(v, s));
+    public void createDeck(){ //creates deck
+        for(int v = 1; v <= 13; v++){ //runs for all faces of a card
+            for(String s: suits){ //runs for all suits of a card
+                deck.add(new Card(v, s)); //creates card in deck
             }
         }
     }
 
-    public void shuffleCards(List<Card> cards){
+    public void shuffleCards(List<Card> cards){//randomizes card order in the list
         Collections.shuffle(cards);
     }
 
-    public void splitDeck1(){
+    public void splitDeck1(){ //adds first 26 cards to the computers deck
         ArrayList<Card> first = new ArrayList<Card>(deck.size()/2);
         for(int i = 0; i < deck.size()/2; i++){
             computer.add(deck.get(i));
         }
     }
 
-    public void splitDeck2(){
+    public void splitDeck2(){ //adds last 26 cards to the players deck
         ArrayList<Card> second = new ArrayList<Card>(deck.size()/2);
         for(int i = (deck.size()/2) - 1; i >= 0; i--){
             player.add(deck.get(i));
         }
     }
 
-    public void swapCards(ArrayList<Card> winner,ArrayList<Card> loser, int index){
-        for(int i = 0; i <= index; i++){ //SOOB problems occur sometimes, check it out
-            winner.add(winner.size()-1, winner.remove(i));
-            winner.add(loser.remove(i));
+    public void swapCards(ArrayList<Card> winner,ArrayList<Card> loser, int index){ //exchanges cards between players after each play
+        for(int i = 0; i <= index; i++){ //exchanges existing amount of ties depending on whether a tie happened
+            winner.add(winner.size()-1, winner.remove(i)); //moves player's own cards to the end
+            winner.add(loser.remove(i)); //adds loser's cards
         }
     }
 
-    public void printCards(ArrayList<Card> cards){
+    public void printCards(ArrayList<Card> cards){ //prints the cards in a deck
         for(int i = 0; i < cards.size(); i++){
             System.out.println(cards.get(i).getSuit() + " " + cards.get(i).getValue() + "\t");
         }
@@ -171,42 +170,43 @@ public class Main extends Application {
     //public boolean willWin(int index){ //Check if someone wins bjn
     //}
 
-    public void War(int index){ //start from 0
+    public void War(int index){ //plays the game
+        //glide animations
         playerGlide(index);
         glide(index);
-        if(player.size() > 0 && computer.size() > 0) {
+
+        if(player.size() > 0 && computer.size() > 0) { //players wins if their value is greater
             System.out.println("player: " + player.get(index).getValue() + " computer: " + computer.get(index).getValue());
             if (player.get(index).getValue() > computer.get(index).getValue()) {
                 swapCards(player, computer, index);
                 System.out.println("player wins!"
                         + "\nNumber of computer cards: " + computer.size()
                         + "\nNumber of player cards: " + player.size());
-            } else if (player.get(index).getValue() < computer.get(index).getValue()) {
+            } else if (player.get(index).getValue() < computer.get(index).getValue()) { //player looses if their value is less
                 swapCards(computer, player, index);
                 System.out.println("computer wins! " +
                         "\nNumber of computer cards: " + computer.size()
                         + "\nNumber of player cards: " + player.size());
                 //computer wins
-            } else {
+            } else { //recursively calls self if a tie is in place
                 System.out.println("tied");
                 while (index < deck.size())
                     War(index + 1);
             }
             System.out.println(" ~ ");
         }else{
-            playWar();
+            playWar(); //Checks conditions to see if an array has been emptied
         }
     }
 
-    public void playWar(){
-        //primaryStage.show();
-        while (player.size() > 0 && computer.size() > 0){
+    public void playWar(){  //controls the operations of the game
+        while (player.size() > 0 && computer.size() > 0){ //plays the game as long as neither deck is empty
             War(0);
         }
-        if(player.size() == 0) {
+        if(player.size() == 0) { //computer wins if player is out of cards
             System.out.println("Computer Wins!");
             System.exit(0);
-        }else if (computer.size() == 0){
+        }else if (computer.size() == 0){ //player wins if computer is out of cards
             System.out.println("Player Wins!");
             System.exit(0);
         }
@@ -214,17 +214,17 @@ public class Main extends Application {
     }
 
     //Creating the mouse event handler
-    EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+    EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() { //acts when the player's deck is clicked on
         @Override
         public void handle(MouseEvent e) {
+            //updates card numbers
             t_p.setText("Player Cards: " + player.size());
             t_c.setText("Computer Cards: " + computer.size());
 
-
-            System.out.println("Clicked!");
+            System.out.println("Clicked!"); //puts confirmation on terminal
             if(player.size() > 0 && computer.size() > 0){
-                War(0);
-            }else if(player.size() == 0) {
+                War(0); //plays the game if neither array is empty
+            }else if(player.size() == 0) { //ends game with a player winning if one of the decks are empty
                 System.out.println("Computer Wins!");
                 System.exit(0);
             }else if (computer.size() == 0){
