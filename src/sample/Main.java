@@ -94,7 +94,9 @@ public class Main extends Application {
         //creates two rectangles on top of each deck
 
         Rectangle r_computer = new Rectangle(x, comp_y, 80, 120); //creates the opponent's card
+        //if(!(index >= computer.size())) {
         Text t_c = new Text(computer.get(index).getSuit() + "\n" + computer.get(index).getValue()); //displays value of card
+        //}
 
         StackPane stack = new StackPane(); //stack that will store both values
         stack.getChildren().addAll(r_computer, t_c); //adds both elements to the stack
@@ -156,8 +158,10 @@ public class Main extends Application {
 
     public void swapCards(ArrayList<Card> winner,ArrayList<Card> loser, int index){ //exchanges cards between players after each play
         for(int i = 0; i <= index; i++){ //exchanges existing amount of ties depending on whether a tie happened
-            winner.add(winner.size()-1, winner.remove(i)); //moves player's own cards to the end
-            winner.add(loser.remove(i)); //adds loser's cards
+            if(i < loser.size()) {
+                winner.add(winner.size() - 1, winner.remove(i)); //moves player's own cards to the end
+                winner.add(loser.remove(i)); //adds loser's cards
+            }
         }
     }
 
@@ -167,15 +171,40 @@ public class Main extends Application {
         }
     }
 
-    //public boolean willWin(int index){ //Check if someone wins bjn
-    //}
+    public boolean willWin(int index, ArrayList<Card> a, ArrayList<Card> b) { //Check if someone wins bjn
+        if(a.size() > 1){
+            return true;
+        }
+            if (a.get(index).getValue() < b.get(index).getValue()) {
+                return false;
+            } else if (a.get(index).getValue() == b.get(index).getValue()){
+                if(a.size() < index + 1) {
+                    return false;
+                }else {
+                    return willWin(index + 1, a, b);
+                }
 
-    public void War(int index){ //plays the game
+            }else {
+                return true;
+            }
+    }
+
+    public void War(int index) { //plays the game
+        if((index > player.size()) && (index > computer.size())){
+            System.out.println("Nobody Wins");
+            System.exit(0);
+        }else if(index > computer.size()){
+            System.out.println("Player Wins");
+            System.exit(0);
+        }else if(index > player.size()) {
+            System.out.println("Computer Wins");
+            System.exit(0);
+        }
         //glide animations
         playerGlide(index);
         glide(index);
 
-        if(player.size() > 0 && computer.size() > 0) { //players wins if their value is greater
+        if (player.size() > 1 && computer.size() > 1) { //players wins if their value is greater
             System.out.println("player: " + player.get(index).getValue() + " computer: " + computer.get(index).getValue());
             if (player.get(index).getValue() > computer.get(index).getValue()) {
                 swapCards(player, computer, index);
@@ -190,12 +219,26 @@ public class Main extends Application {
                 //computer wins
             } else { //recursively calls self if a tie is in place
                 System.out.println("tied");
-                while (index < deck.size())
-                    War(index + 1);
+                if((computer.size() == 1) && (player.size() == 1)){
+                    System.out.println("Nobody Wins");
+                    System.exit(0);
+                }else if(computer.size() == 1){
+                    System.out.println("Player Wins");
+                    System.exit(0);
+                }else if(player.size() == 1){
+                    System.out.println("Computer Wins");
+                    System.exit(0);
+                }else {
+                    while (index < player.size() && index < computer.size()) {
+                        War(index + 1);
+                    }
+                }
             }
             System.out.println(" ~ ");
+        } else if(willWin(index, player, computer) && willWin(index, player, computer)){
+                playWar();
         }else{
-            playWar(); //Checks conditions to see if an array has been emptied
+            System.out.println("Game over");
         }
     }
 
@@ -217,21 +260,22 @@ public class Main extends Application {
     EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() { //acts when the player's deck is clicked on
         @Override
         public void handle(MouseEvent e) {
-            //updates card numbers
-            t_p.setText("Player Cards: " + player.size());
-            t_c.setText("Computer Cards: " + computer.size());
+                //updates card numbers
+                t_p.setText("Player Cards: " + player.size());
+                t_c.setText("Computer Cards: " + computer.size());
 
-            System.out.println("Clicked!"); //puts confirmation on terminal
-            if(player.size() > 0 && computer.size() > 0){
-                War(0); //plays the game if neither array is empty
-            }else if(player.size() == 0) { //ends game with a player winning if one of the decks are empty
-                System.out.println("Computer Wins!");
-                System.exit(0);
-            }else if (computer.size() == 0){
-                System.out.println("Player Wins!");
-                System.exit(0);
+                System.out.println("Clicked!"); //puts confirmation on terminal
+                if (player.size() > 0 && computer.size() > 0) {
+                    War(0); //plays the game if neither array is empty
+                } else if (player.size() == 0) { //ends game with a player winning if one of the decks are empty
+                    System.out.println("Computer Wins!");
+                    System.exit(0);
+                } else if (computer.size() == 0) {
+                    System.out.println("Player Wins!");
+                    System.exit(0);
+                }
             }
-        }
+
     }; //I learned how to add the clicking reaction from https://www.tutorialspoint.com/javafx/javafx_event_handling.htm
 
 
