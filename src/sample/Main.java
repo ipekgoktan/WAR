@@ -168,24 +168,6 @@ public class Main extends Application {
         }
     }
 
-    public boolean willWin(int index, ArrayList<Card> a, ArrayList<Card> b) { //Check if someone wins bjn
-        if(a.size() > 1){
-            return true;
-        }
-            if (a.get(index).getValue() < b.get(index).getValue()) {
-                return false;
-            } else if (a.get(index-1).getValue() == b.get(index-1).getValue()){
-                if(a.size() < index + 1) {
-                    return false;
-                }else {
-                    return willWin(index + 1, a, b);
-                }
-
-            }else {
-                return true;
-            }
-    }
-
     public void War(int index) { //plays the game
 
         //glide animations
@@ -271,13 +253,10 @@ public class Main extends Application {
 
     }; //I learned how to add the clicking reaction from https://www.tutorialspoint.com/javafx/javafx_event_handling.htm
 
-
-
     public static void main(String[] args) {
         launch(args);
     }
 }
-
 
 
 //gliding code research from https://www.mkyong.com/javafx/javafx-animated-ball-example/
