@@ -42,6 +42,7 @@ public class Main extends Application {
     Text t_c = new Text(350, 15, "Computer Cards: "); //text that displays computer cards
 
 
+
     @Override
     public void start(Stage primaryStage) throws Exception{
         createDeck(); //creates deck
@@ -90,13 +91,9 @@ public class Main extends Application {
     }
 
     public void glide(int index){ //glide animation for computers card
-        //Pane canvas = new Pane();
-        //creates two rectangles on top of each deck
 
         Rectangle r_computer = new Rectangle(x, comp_y, 80, 120); //creates the opponent's card
-        //if(!(index >= computer.size())) {
         Text t_c = new Text(computer.get(index).getSuit() + "\n" + computer.get(index).getValue()); //displays value of card
-        //}
 
         StackPane stack = new StackPane(); //stack that will store both values
         stack.getChildren().addAll(r_computer, t_c); //adds both elements to the stack
@@ -177,7 +174,7 @@ public class Main extends Application {
         }
             if (a.get(index).getValue() < b.get(index).getValue()) {
                 return false;
-            } else if (a.get(index).getValue() == b.get(index).getValue()){
+            } else if (a.get(index-1).getValue() == b.get(index-1).getValue()){
                 if(a.size() < index + 1) {
                     return false;
                 }else {
@@ -190,21 +187,13 @@ public class Main extends Application {
     }
 
     public void War(int index) { //plays the game
-        if((index > player.size()) && (index > computer.size())){
-            System.out.println("Nobody Wins");
-            System.exit(0);
-        }else if(index > computer.size()){
-            System.out.println("Player Wins");
-            System.exit(0);
-        }else if(index > player.size()) {
-            System.out.println("Computer Wins");
-            System.exit(0);
-        }
+
         //glide animations
         playerGlide(index);
         glide(index);
 
-        if (player.size() > 1 && computer.size() > 1) { //players wins if their value is greater
+
+        if (player.size() > 0 && computer.size() > 0) { //THIS USED TO BE > 1
             System.out.println("player: " + player.get(index).getValue() + " computer: " + computer.get(index).getValue());
             if (player.get(index).getValue() > computer.get(index).getValue()) {
                 swapCards(player, computer, index);
@@ -219,39 +208,41 @@ public class Main extends Application {
                 //computer wins
             } else { //recursively calls self if a tie is in place
                 System.out.println("tied");
-                if((computer.size() == 1) && (player.size() == 1)){
-                    System.out.println("Nobody Wins");
-                    System.exit(0);
-                }else if(computer.size() == 1){
-                    System.out.println("Player Wins");
-                    System.exit(0);
-                }else if(player.size() == 1){
-                    System.out.println("Computer Wins");
-                    System.exit(0);
-                }else {
-                    while (index < player.size() && index < computer.size()) {
-                        War(index + 1);
-                    }
-                }
+                playWar(index + 1);
             }
             System.out.println(" ~ ");
-        } else if(willWin(index, player, computer) && willWin(index, player, computer)){
-                playWar();
-        }else{
-            System.out.println("Game over");
         }
+
     }
 
-    public void playWar(){  //controls the operations of the game
-        while (player.size() > 0 && computer.size() > 0){ //plays the game as long as neither deck is empty
-            War(0);
+    public void playWar(int start){  //controls the operations of the game
+        if (player.size() > 0 && computer.size() > 0){ //plays the game as long as neither deck is empty
+            War(start);
+            if(player.size() == 0) { //computer wins if player is out of cards
+                Text win = new Text(200, 250, "Computer Wins!");
+                root.getChildren().add(win);
+                System.out.println("Computer Wins!");
+                System.out.println("Game over");
+                //System.exit(0);
+            }else if (computer.size() == 0){ //player wins if computer is out of cards
+                Text win = new Text(200, 250,"Player Wins!");
+                root.getChildren().add(win);
+                System.out.println("Player Wins!");
+                System.out.println("Game over");
+                //System.exit(0);
+            }
         }
+
         if(player.size() == 0) { //computer wins if player is out of cards
+            Text win = new Text(200, 250,"Computer Wins!");
             System.out.println("Computer Wins!");
-            System.exit(0);
+            root.getChildren().add(win);
+            //System.exit(0);
         }else if (computer.size() == 0){ //player wins if computer is out of cards
+            Text win = new Text(200, 250, "Player Wins!");
             System.out.println("Player Wins!");
-            System.exit(0);
+            root.getChildren().add(win);
+            //System.exit(0);
         }
 
     }
@@ -266,13 +257,15 @@ public class Main extends Application {
 
                 System.out.println("Clicked!"); //puts confirmation on terminal
                 if (player.size() > 0 && computer.size() > 0) {
-                    War(0); //plays the game if neither array is empty
+                    playWar(0); //plays the game if neither array is empty
                 } else if (player.size() == 0) { //ends game with a player winning if one of the decks are empty
-                    System.out.println("Computer Wins!");
-                    System.exit(0);
+                    Text win = new Text(200, 250, "Computer Wins!");
+                    root.getChildren().add(win);
+                    //System.exit(0);
                 } else if (computer.size() == 0) {
-                    System.out.println("Player Wins!");
-                    System.exit(0);
+                    Text win = new Text(200, 250, "Player Wins!");
+                    root.getChildren().add(win);
+                    //System.exit(0);
                 }
             }
 
