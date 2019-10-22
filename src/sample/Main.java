@@ -1,3 +1,30 @@
+// A: Ipek, you have a lot of nice work here. I am particularly fond of the
+// gliding animation that is part of the interface. I suggest finding ways
+// to separate the logic of your program from the graphics and the models.
+// The more distinct you can make these (e.g. they can be distinct classes),
+// the more maintainable your code will be.
+
+// Evaluation: 46/50
+//
+// (10/10) Accurately reproduce the logic of the game War. Variations of the game logic
+// are allowed, but you should check with me first before including them. (10 pts.)
+//
+// (10/10) Include a graphical user interface for the application that shows
+// representations of cards. (10 pts.)
+//
+// (10/10) Contain comments explaining code and intent throughout the code base. (10 pts.)
+//
+// (10/10) Be maintained using git and be linked to a remote repository on Github. Commit
+// messages should be clear and informative throughout your development process.
+// Commits should be regular and frequent. (10 pts.)
+//
+// (2/5) Demonstrate a clear design that manages complexity and preserves
+// maintainability. (5 pts.)
+//
+// (4/5) Include a README.md that describes your application and your approach
+// to solving problems you encountered while creating it. This need not be a
+// diary, but your design should be clearly explained here. (5 pts.)
+
 package sample;
 
 import javafx.animation.KeyFrame;
@@ -110,6 +137,7 @@ public class Main extends Application {
         r_computer.setFill(Color.WHITESMOKE);
     }
 
+    // TODO: combine glide and playerGlide into a single method with params int index, ArrayList<Card> player
     public void playerGlide(int index){
         Rectangle r_p = new Rectangle(80, 120); //creates the card of the player, which is represented by a rectangle
         Text t_p = new Text(player.get(index).getSuit() + "\n" + player.get(index).getValue()); //displays value of card
@@ -139,6 +167,7 @@ public class Main extends Application {
         Collections.shuffle(cards);
     }
 
+    // TODO: Can splitDeck1 and splitDeck2 be combined and parametrized?
     public void splitDeck1(){ //adds first 26 cards to the computers deck
         ArrayList<Card> first = new ArrayList<Card>(deck.size()/2);
         for(int i = 0; i < deck.size()/2; i++){
