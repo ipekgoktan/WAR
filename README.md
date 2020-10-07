@@ -1,5 +1,8 @@
 # WAR
 
+This project plays the card game War with players. Which is a fun and simple game that is played with two players where the goal is to win the most cards.
+
+
 * I started off with creating the animation of the card placement. I created two rectangles that represent each 
 deck and created two methods (one for the user & the other for the computer) that created a similar triangle on top of the deck that glides towards the center. 
   I used this website as a reference: https://www.mkyong.com/javafx/javafx-animated-ball-example/
